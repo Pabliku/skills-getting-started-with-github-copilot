@@ -110,6 +110,35 @@ section h3 {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.participant-item.new-participant {
+  animation: new-registration-highlight 2.5s ease-out forwards;
+  border-color: #ffca28;
+  box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.35);
+}
+
+@keyframes new-registration-highlight {
+  0% {
+    background-color: #fff8e1;
+    box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.45);
+    transform: scale(1);
+  }
+  20% {
+    background-color: #fff8e1;
+    box-shadow: 0 0 16px 8px rgba(255, 202, 40, 0.55);
+    transform: scale(1.02);
+  }
+  40% {
+    background-color: #fff8e1;
+    box-shadow: 0 0 24px 12px rgba(255, 202, 40, 0.45);
+    transform: scale(1.03);
+  }
+  100% {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 0 rgba(255, 202, 40, 0);
+    transform: scale(1);
+  }
+}
+
 .participant-item.firework {
   position: relative;
   animation: firework-explode 0.8s ease-out forwards;

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  let newRegistration = null;
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -23,15 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const participants = details.participants || [];
         const participantsMarkup = participants.length
           ? `<ul class="participants-list">${participants
-              .map(
-                (participant) => `
-                  <li class="participant-item" data-activity="${encodeURIComponent(name)}" data-email="${encodeURIComponent(participant)}">
+              .map((participant) => {
+                const isNew = newRegistration && newRegistration.activityName === name && newRegistration.email === participant;
+                return `
+                  <li class="participant-item${isNew ? " new-participant" : ""}" data-activity="${encodeURIComponent(name)}" data-email="${encodeURIComponent(participant)}">
                     <span class="participant-name">${participant}</span>
                     <button class="delete-participant" type="button" aria-label="Remove ${participant}" data-activity="${encodeURIComponent(name)}" data-email="${encodeURIComponent(participant)}">
                       ✕
                     </button>
-                  </li>`
-              )
+                  </li>`;
+              })
               .join("")}</ul>`
           : `<p class="participants-empty">Be the first to sign up!</p>`;
 
@@ -54,6 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = name;
         activitySelect.appendChild(option);
       });
+
+      if (newRegistration) {
+        setTimeout(() => {
+          newRegistration = null;
+          fetchActivities();
+        }, 3000);
+      }
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);
@@ -134,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        newRegistration = { activityName: activity, email };
         fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
